@@ -14,8 +14,8 @@ export class MathUtils {
 
         while (!Utilities.isPrime(out)) {
             out++
-            if (out > 1024)
-                out = randomInt(1, 1024)
+            if (out > 65536)
+                out = randomInt(1, 65536)
         }
         return out
     }
@@ -48,7 +48,7 @@ export class MathUtils {
     static gcd(a: number, b: number): number {
         a = Math.abs(a);
         b = Math.abs(b);
-        while(b) {
+        while (b) {
             let t = b;
             b = a % b;
             a = t;
@@ -56,4 +56,34 @@ export class MathUtils {
         return a;
     }
 
+    /**
+     * So this math I don't fully know how to explain nor whether it is right.
+     * @param a Number to find the Euclidean greatest common denominator against b
+     * @param b Number to find the Euclidean greatest common denominator against a
+     */
+    static extendedEuclideanAlgorithm(a: number, b: number): [number, number, number] {
+        //  r = gcd(a,b) i = multiplicative inverse of a mod b
+        //       or      j = multiplicative inverse of b mod a
+        //  Neg return values for i or j are made positive mod b or a respectively
+        //  Iterative Version is faster and uses much less stack space
+        let x = 0,
+            y = 1,
+            lx = 1,
+            ly = 0,
+            oa = a,  // Remember original a/b to remove
+            ob = b  // negative values from return results
+        while (b != 0) {
+            let q = Math.floor(a / b);
+            [a, b] = [b, a % b];
+            [x, lx] = [(lx - (q * x)), x];
+            [y, ly] = [(ly - (q * y)), y];
+
+            if (lx < 0)
+                lx += ob //If neg wrap modulo original b
+        }
+
+        if (ly < 0)
+            ly += oa //If neg wrap modulo original a
+        return [a, lx, ly] //Return only positive values
+    }
 }
