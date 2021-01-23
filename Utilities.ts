@@ -14,6 +14,4 @@ export class Utilities {
 
         return true
     }
-
-
 }
